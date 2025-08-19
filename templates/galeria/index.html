@@ -78,6 +78,7 @@
       border-radius: 8px;
       background: white;
       transition: transform 0.2s;
+      color: #1e293b;
     }
     .action-card:hover {
       transform: translateY(-4px);
@@ -124,14 +125,18 @@
             <p style="color: #64748b;">Simplify. Organize. Grow.</p>
         </div>
         <div class="actions">
-          <div class="action-card">
-            <div class="action-icon">🛒</div>
-            <div>Sales</div>
-          </div>
-          <div class="action-card">
-            <div class="action-icon">📄</div>
-            <div>Purchases</div>
-          </div>
+          <a href="{% url 'sales' %}" class="anchor">
+            <div class="action-card">
+              <div class="action-icon">🛒</div>
+              <div>Sales</div>
+            </div>
+          </a>
+          <a href="{% url 'purchase' %}" class="anchor">
+            <div class="action-card">
+              <div class="action-icon">📄</div>
+              <div>Purchases</div>
+            </div>
+          </a>
           <div class="action-card">
             <div class="action-icon">📦</div>
             <div>Inventory</div>
