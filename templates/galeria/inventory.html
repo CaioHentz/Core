@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core - Inventory</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Poppins, sans-serif;
+      background-color: #ffff;
+      color: #1e293b;
+    }
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: auto;
+      padding: 2rem;
+    }
+    aside {
+      width: 200px;
+      padding-right: 0rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 1rem;
+    }
+    .logo img {
+      width: 140px;
+      height: auto;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      color: #1e293b;
+      text-decoration: none;
+    }
+    .nav-item:hover {
+      background-color: #f1f5f9;
+    }
+    .nav-item.active {
+      background-color: #f1f5f9;
+    }
+    .anchor { text-decoration: none; color: inherit; }
+
+    main {
+      flex: 1;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      padding: 1rem;
+    }
+    .card-header {
+      margin-bottom: 1rem;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .summary-item {
+      padding: 0.8rem 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    table th, table td {
+      padding: 0.8rem;
+      border: 1px solid #e2e8f0;
+      text-align: left;
+    }
+    table th {
+      background-color: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside>
+      <div class="logo">
+        <a href="{% url 'index' %}" class="anchor">
+          <img src="{% static '/imgs/core_logo.png'%}" alt="Core Logo">
+        </a>
+      </div>
+      <a href="{% url 'index' %}" class="anchor">
+        <div class="nav-item">🏠 Dashboard</div>
+      </a>
+      <a href="{% url 'sales' %}" class="anchor">
+        <div class="nav-item">🛒 Sales</div>
+      </a>
+      <a href="{% url 'purchase' %}" class="anchor">
+        <div class="nav-item">📄 Purchases</div>
+      </a>
+      <a href="{% url 'inventory' %}" class="anchor">
+        <div class="nav-item active">📦 Inventory</div>
+      </a>
+      <div class="nav-item">📊 Reports</div>
+    </aside>
+
+    <main>
+      <div class="card">
+        <div class="card-header">
+          <h1>Inventory</h1>
+          <p style="color: #64748b;">Current stock by product</p>
+        </div>
+
+        <div class="summary">
+          <div class="summary-item">
+            <div style="font-size: 12px; color:#64748b;">Products</div>
+            <div style="font-size: 20px; font-weight: 600;">
+              {{ stocks|length }}
+            </div>
+          </div>
+          <div class="summary-item">
+            <div style="font-size: 12px; color:#64748b;">Total Quantity</div>
+            <div style="font-size: 20px; font-weight: 600;">
+              {% with 0 as total %}
+                {% for s in stocks %}
+                  {% if forloop.first %}{% widthratio s.quantity 1 1 as total %}{% else %}{% widthratio total|add:s.quantity 1 1 as total %}{% endif %}
+                {% endfor %}
+                {{ total }}
+              {% endwith %}
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in stocks %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ s.product }}</td>
+              <td>{{ s.quantity }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3">No stock records yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
