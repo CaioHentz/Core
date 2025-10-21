@@ -29,7 +29,7 @@ A aplicação conta com uma interface inicial amigável e telas específicas par
 ### Passo a passo
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/core-system.git
+   git clone https://github.com/CaioHentz/Core.git
    cd core-system
    ```
 
