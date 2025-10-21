@@ -1,6 +1,6 @@
-# Core System
+# Core
 
-O **Core System** é uma aplicação simples para gerenciamento de **estoque, compras e vendas**, desenvolvida como parte de um projeto acadêmico.  
+O **Core** é uma aplicação simples para gerenciamento de **estoque, compras e vendas**, desenvolvida como parte de um projeto acadêmico.  
 A aplicação conta com uma interface inicial amigável e telas específicas para **Purchase (compras)** e **Sales (vendas)**.
 
 ---
@@ -30,7 +30,7 @@ A aplicação conta com uma interface inicial amigável e telas específicas par
 1. Clone este repositório:
    ```bash
    git clone https://github.com/CaioHentz/Core.git
-   cd core-system
+   cd Core
    ```
 
 2. Crie um ambiente virtual e ative-o:
