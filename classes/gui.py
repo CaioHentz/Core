@@ -10,7 +10,7 @@ def runapp():
 
     continuar = 's'
 
-    while continuar == 's':
+    while continuar == 's' or continuar == 'S':
 
         acao = int(input("O que deseja fazer?\n1-Compra\n2-Venda\n"))
 

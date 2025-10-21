@@ -114,7 +114,9 @@
       <a href="{% url 'purchase' %}" class="anchor">
         <div class="nav-item">📄 Purchases</div>
       </a>
-      <div class="nav-item">📦 Inventory</div>
+      <a href="{% url 'inventory' %}" class="anchor">
+        <div class="nav-item">📦 Inventory</div>
+      </a>
       <div class="nav-item">📊 Reports</div>
     </aside>
 
@@ -137,10 +139,12 @@
               <div>Purchases</div>
             </div>
           </a>
-          <div class="action-card">
-            <div class="action-icon">📦</div>
-            <div>Inventory</div>
-          </div>
+          <a href="{% url 'inventory' %}" class="anchor">
+            <div class="action-card">
+              <div class="action-icon">📦</div>
+              <div>Inventory</div>
+            </div>
+          </a>
         </div>
       </div>
     </main>
