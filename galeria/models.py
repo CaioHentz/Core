@@ -2,14 +2,23 @@ from django.db import models
 from decimal import Decimal
 from django.utils import timezone
 
+
+class Product(models.Model):
+    
+    name = models.CharField(max_length=25, unique=True)
+    description = models.TextField(blank=True)
+    unit_of_measure = models.CharField(max_length=25)
+
+    def __str__(self):
+        return f"{self.name} ({self.unit_of_measure})"
+
 class Stock(models.Model):
     product = models.CharField(max_length=25, null=False, blank=False)
     quantity = models.DecimalField(max_digits=10, decimal_places=3, null=False, default=Decimal("0"))
 
     def __str__(self):
         return f"Stock(product={self.product}, quantity={self.quantity})"
-
-    # Logic adapted from classes/inventory.py
+  
     @classmethod
     def add_stock(cls, product, quantity):
         qty = Decimal(str(quantity))
