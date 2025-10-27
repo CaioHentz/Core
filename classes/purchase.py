@@ -1,18 +1,23 @@
-class Purchase:
-    def __init__(self, inventory):
-        self.inventory = inventory
-        self.purchases = [] 
+from galeria.models import Product, Stock, Purchase
+from decimal import Decimal
 
-    def add_purchase(self, supplier, product, quantity, price):
+class PurchaseManager:
+    def add_purchase(self, supplier, product_name, quantity, price):
+        try:
+            product = Product.objects.get(name=product_name)
+        except Product.DoesNotExist:
+            print(f"[ERRO] Produto '{product_name}' não encontrado.")
+            return False
 
-        purchase_data = {
-            "supplier": supplier,
-            "product": product,
-            "quantity": quantity,
-            "price": price
-        }
-        self.purchases.append(purchase_data)
+        # Cria registro de compra
+        purchase = Purchase.objects.create(
+            supplier=supplier,
+            product=product,
+            quantity=Decimal(str(quantity)),
+            price=Decimal(str(price))
+        )
 
-        self.inventory.add_stock(product, quantity)
-
-        print(f"[COMPRA] {quantity}x '{product}' comprados de '{supplier}' por R${price:.2f}")
+        # Atualiza estoque automaticamente
+        product.stock.add_stock(quantity)
+        print(f"[COMPRA] {quantity}x '{product.name}' comprados de '{supplier}' por R${price:.2f}")
+        return purchase
