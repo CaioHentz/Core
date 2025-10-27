@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Core - Dashboard</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -15,7 +17,6 @@
           <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
         </a>
       </div>
-      <div class="nav-item">🏠 Dashboard</div>
       <a href="{% url 'sales' %}" class="anchor">
         <div class="nav-item">🛒 Sales</div>
       </a>
@@ -31,9 +32,10 @@
     </aside>
 
     <main>
+      <!-- Quick actions -->
       <div class="card">
         <div class="card-header card-header-flex">
-            <h1 class="card-header-main">Welcome to Core</h1>
+            <h1 class="card-header-main">Core Dashboard</h1>
             <p class="text-muted">Simplify. Organize. Grow.</p>
         </div>
         <div class="actions">
@@ -63,7 +65,183 @@
           </a>
         </div>
       </div>
+
+      <!-- KPI metrics -->
+      <div class="card">
+        <div class="card-header card-header-flex">
+          <h2 class="card-header-main">Key Metrics</h2>
+          <p class="text-muted">Overview of your store performance</p>
+        </div>
+        <div class="actions">
+          <div class="action-card">
+            <div class="action-icon">💰</div>
+            <div>
+              <div class="text-muted">Total Sales</div>
+              <div class="metric-value">{{ metrics.total_sales }}</div>
+            </div>
+          </div>
+          <div class="action-card">
+            <div class="action-icon">🧾</div>
+            <div>
+              <div class="text-muted">Total Purchases</div>
+              <div class="metric-value">{{ metrics.total_purchases }}</div>
+            </div>
+          </div>
+          <div class="action-card">
+            <div class="action-icon">🏆</div>
+            <div>
+              <div class="text-muted">Product Most Sold</div>
+              <div class="metric-value">
+                {{ metrics.product_most_sold }}
+                {% if metrics.product_most_sold_qty %}
+                  ({{ metrics.product_most_sold_qty }})
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="action-card">
+            <div class="action-icon">📈</div>
+            <div>
+              <div class="text-muted">Total Profit</div>
+              <div class="metric-value">{{ metrics.total_profit }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Sales vs Purchases</h2>
+        </div>
+        <div class="card-body">
+          <canvas id="totalsChart" height="120"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Top Products Sold</h2>
+        </div>
+        <div class="card-body">
+          <canvas id="topProductsChart" height="140"></canvas>
+        </div>
+      </div>
+
+      <!-- Embed charts data as JSON using Django's json_script for robust parsing -->
+      {{ charts|json_script:"charts-data" }}
     </main>
   </div>
+
+  <script>
+    (function() {
+      const charts = JSON.parse(document.getElementById('charts-data').textContent);
+
+      const totalsLabels = (charts.totals && charts.totals.labels) ? charts.totals.labels : [];
+      const totalsData = (charts.totals && charts.totals.data) ? charts.totals.data.map(Number) : [];
+
+      const topLabels = (charts.topProducts && charts.topProducts.labels) ? charts.topProducts.labels : [];
+      const topData = (charts.topProducts && charts.topProducts.data) ? charts.topProducts.data.map(Number) : [];
+
+      // Fallback to show at least one bar if there are no sales yet
+      const topLabelsFinal = topLabels.length ? topLabels : ['No data'];
+      const topDataFinal = topData.length ? topData : [0];
+
+      // Formatting helpers: floatformat:-3 style with thousands '.' and decimal ','
+      function fmt(n) {
+        const x = Number(n);
+        if (!isFinite(x)) return '0';
+        const neg = x < 0;
+        const abs = Math.abs(x);
+        // keep up to 3 decimals then trim trailing zeros
+        const fixed = abs.toFixed(3).replace(/\.?0+$/,''); // uses '.' as decimal temporarily
+        const parts = fixed.split('.');
+        const intPart = parts[0];
+        const fracPart = parts[1];
+        // add thousands separators with '.' on absolute part
+        const intWithDots = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        // use ',' as decimal separator if there are decimals
+        const res = fracPart ? (intWithDots + ',' + fracPart) : intWithDots;
+        return neg ? ('-' + res) : res;
+      }
+      function fmtCurrency(n) {
+        return '$' + fmt(n);
+      }
+
+      // Sales vs Purchases
+      const totalsCtx = document.getElementById('totalsChart').getContext('2d');
+      new Chart(totalsCtx, {
+        type: 'bar',
+        data: {
+          labels: totalsLabels,
+          datasets: [{
+            label: 'Amount',
+            data: totalsData,
+          backgroundColor: ['#4CAF50', '#F44336']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              callbacks: {
+                label: function(ctx) {
+                  const val = (ctx.parsed && typeof ctx.parsed.y !== 'undefined') ? ctx.parsed.y : ctx.raw;
+                  return ctx.dataset.label + ': ' + fmtCurrency(val);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) { return fmtCurrency(value); }
+              }
+            }
+          }
+        }
+      });
+
+      // Top Products Sold
+      const topCtx = document.getElementById('topProductsChart').getContext('2d');
+      new Chart(topCtx, {
+        type: 'bar',
+        data: {
+          labels: topLabelsFinal,
+          datasets: [{
+            label: 'Quantity Sold',
+            data: topDataFinal,
+          backgroundColor: '#2196F3'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              callbacks: {
+                label: function(ctx) {
+                  const val = (ctx.parsed && typeof ctx.parsed.y !== 'undefined') ? ctx.parsed.y : ctx.raw;
+                  return ctx.dataset.label + ': ' + fmt(val);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) { return fmt(value); }
+              }
+            }
+          }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
