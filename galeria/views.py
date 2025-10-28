@@ -18,9 +18,12 @@ def index(request):
 
     # Aggregate quantities sold per product
     sold_qty_map = defaultdict(Decimal)
+    sold_value_map = defaultdict(Decimal)
     for s in sales_qs:
         try:
-            sold_qty_map[s.product] += (s.quantity or Decimal("0"))
+            qty = (s.quantity or Decimal("0"))
+            sold_qty_map[s.product] += qty
+            sold_value_map[s.product] += (qty * (s.price or Decimal("0")))
         except Exception:
             pass
 
@@ -29,10 +32,10 @@ def index(request):
     else:
         most_sold_name, most_sold_qty = "N/A", Decimal("0")
 
-    # Chart data: Top 5 sold products by quantity
-    top_sorted = sorted(sold_qty_map.items(), key=lambda kv: kv[1], reverse=True)[:5]
+    # Chart data: Top 5 products by value sold
+    top_sorted = sorted(sold_value_map.items(), key=lambda kv: kv[1], reverse=True)[:5]
     top_labels = [name for name, _ in top_sorted]
-    top_data = [float(q) for _, q in top_sorted]
+    top_data = [float(v) for _, v in top_sorted]
 
     # Chart data: Totals (sales vs purchases)
     totals_labels = ["Sales", "Purchases"]

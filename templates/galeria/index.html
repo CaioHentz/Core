@@ -33,44 +33,13 @@
 
     <main>
       <!-- Quick actions -->
-      <div class="card">
-        <div class="card-header card-header-flex">
-            <h1 class="card-header-main">Core Dashboard</h1>
-            <p class="text-muted">Simplify. Organize. Grow.</p>
-        </div>
-        <div class="actions">
-          <a href="{% url 'sales' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">🛒</div>
-              <div>Sales</div>
-            </div>
-          </a>
-          <a href="{% url 'purchase' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">📄</div>
-              <div>Purchases</div>
-            </div>
-          </a>
-          <a href="{% url 'inventory' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">📦</div>
-              <div>Inventory</div>
-            </div>
-          </a>
-          <a href="{% url 'products' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">🧾</div>
-              <div>Products</div>
-            </div>
-          </a>
-        </div>
-      </div>
+    
 
       <!-- KPI metrics -->
       <div class="card">
         <div class="card-header card-header-flex">
           <h2 class="card-header-main">Key Metrics</h2>
-          <p class="text-muted">Overview of your store performance</p>
+          <p class="text-muted">Overview of your performance</p>
         </div>
         <div class="actions">
           <div class="action-card">
@@ -121,7 +90,7 @@
 
       <div class="card">
         <div class="card-header">
-          <h2>Top Products Sold</h2>
+          <h2>Top Products by Sales Value</h2>
         </div>
         <div class="card-body">
           <canvas id="topProductsChart" height="140"></canvas>
@@ -212,7 +181,7 @@
         data: {
           labels: topLabelsFinal,
           datasets: [{
-            label: 'Quantity Sold',
+            label: 'Sales Value',
             data: topDataFinal,
           backgroundColor: '#2196F3'
           }]
@@ -226,7 +195,7 @@
               callbacks: {
                 label: function(ctx) {
                   const val = (ctx.parsed && typeof ctx.parsed.y !== 'undefined') ? ctx.parsed.y : ctx.raw;
-                  return ctx.dataset.label + ': ' + fmt(val);
+                  return ctx.dataset.label + ': ' + fmtCurrency(val);
                 }
               }
             }
@@ -235,7 +204,7 @@
             y: {
               beginAtZero: true,
               ticks: {
-                callback: function(value) { return fmt(value); }
+                callback: function(value) { return fmtCurrency(value); }
               }
             }
           }
