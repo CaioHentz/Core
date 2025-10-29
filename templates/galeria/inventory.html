@@ -15,18 +15,18 @@
           <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
         </a>
       </div>
-      <a href="{% url 'sales' %}" class="anchor">
-        <div class="nav-item">🛒 Sales</div>
-      </a>
-      <a href="{% url 'purchase' %}" class="anchor">
-        <div class="nav-item">📄 Purchases</div>
-      </a>
-      <a href="{% url 'inventory' %}" class="anchor">
-        <div class="nav-item active">📦 Inventory</div>
-      </a>
-      <a href="{% url 'products' %}" class="anchor">
-        <div class="nav-item">🧾 Products</div>
-      </a>
+      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Documents</div>
+        <a href="{% url 'sales' %}" class="anchor"><div class="nav-item">🛒 Sales</div></a>
+        <a href="{% url 'purchase' %}" class="anchor"><div class="nav-item">📄 Purchases</div></a>
+        <a href="{% url 'inventory' %}" class="anchor"><div class="nav-item active">📦 Inventory</div></a>
+      </div>
+      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Master Data</div>
+        <a href="{% url 'products' %}" class="anchor"><div class="nav-item">🧾 Products</div></a>
+        <a href="{% url 'customers' %}" class="anchor"><div class="nav-item">👤 Customers</div></a>
+        <a href="{% url 'suppliers' %}" class="anchor"><div class="nav-item">🏭 Suppliers</div></a>
+      </div>
   
     </aside>
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Core - New Product</title>
+  <title>Core - Customers</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -31,9 +31,12 @@
 
     <main>
       <div class="card">
-        <div class="card-header">
-          <h1>{% if product %}Edit Product{% else %}New Product{% endif %}</h1>
-          <p class="text-muted">{% if product %}Update product details{% else %}Create a new product (material){% endif %}</p>
+        <div class="card-header card-header-row">
+          <div>
+            <h1>Customers</h1>
+            <p class="text-muted m-0">Manage your customer master here</p>
+          </div>
+          <a href="{% url 'customer_create' %}" class="btn">+ New Customer</a>
         </div>
 
         {% if messages %}
@@ -44,27 +47,34 @@
         </ul>
         {% endif %}
 
-        <form method="post" action="">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input id="name" name="name" maxlength="25" placeholder="Enter product name" value="{{ product.name }}" required>
-          </div>
-          <div class="form-group">
-            <label for="unit_of_measure">Unit of Measure</label>
-            <input id="unit_of_measure" name="unit_of_measure" maxlength="25" placeholder="e.g., kg, pcs, m" value="{{ product.unit_of_measure }}" required>
-          </div>
-          <div class="form-group">
-            <label for="description">Description (optional)</label>
-            <textarea id="description" name="description" rows="4" placeholder="Enter description">{{ product.description }}</textarea>
-          </div>
-          <div class="actions">
-            <button type="submit" class="btn">{% if product %}Save Changes{% else %}Create{% endif %}</button>
-            <a href="{% url 'products' %}" class="btn secondary">Cancel</a>
-          </div>
-        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in customers %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ c.name }}</td>
+              <td>{{ c.description|default:"-" }}</td>
+              <td>
+                <a href="{% url 'customer_edit' c.id %}" class="btn btn-sm">Edit</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4">No customers yet. Click "New Customer" to add one.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-    </main>
+</main>
   </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Core - New Product</title>
+  <title>Core - {% if customer %}Edit Customer{% else %}New Customer{% endif %}</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -32,8 +32,8 @@
     <main>
       <div class="card">
         <div class="card-header">
-          <h1>{% if product %}Edit Product{% else %}New Product{% endif %}</h1>
-          <p class="text-muted">{% if product %}Update product details{% else %}Create a new product (material){% endif %}</p>
+          <h1>{% if customer %}Edit Customer{% else %}New Customer{% endif %}</h1>
+          <p class="text-muted">{% if customer %}Update customer details{% else %}Create a new customer{% endif %}</p>
         </div>
 
         {% if messages %}
@@ -48,23 +48,19 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="name">Name</label>
-            <input id="name" name="name" maxlength="25" placeholder="Enter product name" value="{{ product.name }}" required>
-          </div>
-          <div class="form-group">
-            <label for="unit_of_measure">Unit of Measure</label>
-            <input id="unit_of_measure" name="unit_of_measure" maxlength="25" placeholder="e.g., kg, pcs, m" value="{{ product.unit_of_measure }}" required>
+            <input id="name" name="name" maxlength="25" placeholder="Enter customer name" value="{{ customer.name }}" required>
           </div>
           <div class="form-group">
             <label for="description">Description (optional)</label>
-            <textarea id="description" name="description" rows="4" placeholder="Enter description">{{ product.description }}</textarea>
+            <textarea id="description" name="description" rows="4" placeholder="Enter description">{{ customer.description }}</textarea>
           </div>
           <div class="actions">
-            <button type="submit" class="btn">{% if product %}Save Changes{% else %}Create{% endif %}</button>
-            <a href="{% url 'products' %}" class="btn secondary">Cancel</a>
+            <button type="submit" class="btn">{% if customer %}Save Changes{% else %}Create{% endif %}</button>
+            <a href="{% url 'customers' %}" class="btn secondary">Cancel</a>
           </div>
         </form>
       </div>
-    </main>
+</main>
   </div>
 </body>
 </html>

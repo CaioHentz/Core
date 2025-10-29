@@ -12,6 +12,20 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name} ({self.unit_of_measure})"
 
+class Supplier(models.Model):
+    name = models.CharField(max_length=25, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+class Customer(models.Model):
+    name = models.CharField(max_length=25, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
 class Stock(models.Model):
     product = models.CharField(max_length=25, null=False, blank=False)
     quantity = models.DecimalField(max_digits=10, decimal_places=3, null=False, default=Decimal("0"))
