@@ -6,8 +6,10 @@ C:.
 |   estrutura.txt
 |   get-pip.py
 |   manage.py
+|   procfile
 |   README.md
 |   requirement.txt
+|   requirements.txt
 |   
 +---classes
 |       gui.py
@@ -66,9 +68,167 @@ C:.
 |   \---__pycache__
 |           settings.cpython-313.pyc
 |           urls.cpython-313.pyc
+|           wsgi.cpython-313.pyc
 |           __init__.cpython-313.pyc
 |           
 +---static
+|   +---admin
+|   |   +---css
+|   |   |   |   autocomplete.css
+|   |   |   |   base.css
+|   |   |   |   changelists.css
+|   |   |   |   dark_mode.css
+|   |   |   |   dashboard.css
+|   |   |   |   forms.css
+|   |   |   |   login.css
+|   |   |   |   nav_sidebar.css
+|   |   |   |   responsive.css
+|   |   |   |   responsive_rtl.css
+|   |   |   |   rtl.css
+|   |   |   |   unusable_password_field.css
+|   |   |   |   widgets.css
+|   |   |   |   
+|   |   |   \---vendor
+|   |   |       \---select2
+|   |   |               LICENSE-SELECT2.md
+|   |   |               select2.css
+|   |   |               select2.min.css
+|   |   |               
+|   |   +---img
+|   |   |   |   calendar-icons.svg
+|   |   |   |   icon-addlink.svg
+|   |   |   |   icon-alert.svg
+|   |   |   |   icon-calendar.svg
+|   |   |   |   icon-changelink.svg
+|   |   |   |   icon-clock.svg
+|   |   |   |   icon-deletelink.svg
+|   |   |   |   icon-hidelink.svg
+|   |   |   |   icon-no.svg
+|   |   |   |   icon-unknown-alt.svg
+|   |   |   |   icon-unknown.svg
+|   |   |   |   icon-viewlink.svg
+|   |   |   |   icon-yes.svg
+|   |   |   |   inline-delete.svg
+|   |   |   |   LICENSE
+|   |   |   |   README.txt
+|   |   |   |   search.svg
+|   |   |   |   selector-icons.svg
+|   |   |   |   sorting-icons.svg
+|   |   |   |   tooltag-add.svg
+|   |   |   |   tooltag-arrowright.svg
+|   |   |   |   
+|   |   |   \---gis
+|   |   |           move_vertex_off.svg
+|   |   |           move_vertex_on.svg
+|   |   |           
+|   |   \---js
+|   |       |   actions.js
+|   |       |   autocomplete.js
+|   |       |   calendar.js
+|   |       |   cancel.js
+|   |       |   change_form.js
+|   |       |   core.js
+|   |       |   filters.js
+|   |       |   inlines.js
+|   |       |   jquery.init.js
+|   |       |   nav_sidebar.js
+|   |       |   popup_response.js
+|   |       |   prepopulate.js
+|   |       |   prepopulate_init.js
+|   |       |   SelectBox.js
+|   |       |   SelectFilter2.js
+|   |       |   theme.js
+|   |       |   unusable_password_field.js
+|   |       |   urlify.js
+|   |       |   
+|   |       +---admin
+|   |       |       DateTimeShortcuts.js
+|   |       |       RelatedObjectLookups.js
+|   |       |       
+|   |       \---vendor
+|   |           +---jquery
+|   |           |       jquery.js
+|   |           |       jquery.min.js
+|   |           |       LICENSE.txt
+|   |           |       
+|   |           +---select2
+|   |           |   |   LICENSE.md
+|   |           |   |   select2.full.js
+|   |           |   |   select2.full.min.js
+|   |           |   |   
+|   |           |   \---i18n
+|   |           |           af.js
+|   |           |           ar.js
+|   |           |           az.js
+|   |           |           bg.js
+|   |           |           bn.js
+|   |           |           bs.js
+|   |           |           ca.js
+|   |           |           cs.js
+|   |           |           da.js
+|   |           |           de.js
+|   |           |           dsb.js
+|   |           |           el.js
+|   |           |           en.js
+|   |           |           es.js
+|   |           |           et.js
+|   |           |           eu.js
+|   |           |           fa.js
+|   |           |           fi.js
+|   |           |           fr.js
+|   |           |           gl.js
+|   |           |           he.js
+|   |           |           hi.js
+|   |           |           hr.js
+|   |           |           hsb.js
+|   |           |           hu.js
+|   |           |           hy.js
+|   |           |           id.js
+|   |           |           is.js
+|   |           |           it.js
+|   |           |           ja.js
+|   |           |           ka.js
+|   |           |           km.js
+|   |           |           ko.js
+|   |           |           lt.js
+|   |           |           lv.js
+|   |           |           mk.js
+|   |           |           ms.js
+|   |           |           nb.js
+|   |           |           ne.js
+|   |           |           nl.js
+|   |           |           pl.js
+|   |           |           ps.js
+|   |           |           pt-BR.js
+|   |           |           pt.js
+|   |           |           ro.js
+|   |           |           ru.js
+|   |           |           sk.js
+|   |           |           sl.js
+|   |           |           sq.js
+|   |           |           sr-Cyrl.js
+|   |           |           sr.js
+|   |           |           sv.js
+|   |           |           th.js
+|   |           |           tk.js
+|   |           |           tr.js
+|   |           |           uk.js
+|   |           |           vi.js
+|   |           |           zh-CN.js
+|   |           |           zh-TW.js
+|   |           |           
+|   |           \---xregexp
+|   |                   LICENSE.txt
+|   |                   xregexp.js
+|   |                   xregexp.min.js
+|   |                   
+|   +---css
+|   |       styles.css
+|   |       
+|   \---imgs
+|           core_logo.png
+|           
++---staticfiles
 |   +---admin
 |   |   +---css
 |   |   |   |   autocomplete.css
@@ -9086,6 +9246,156 @@ C:.
     |       |           __init__.cpython-313.pyc
     |       |           __main__.cpython-313.pyc
     |       |           
+    |       +---gunicorn
+    |       |   |   arbiter.py
+    |       |   |   config.py
+    |       |   |   debug.py
+    |       |   |   errors.py
+    |       |   |   glogging.py
+    |       |   |   pidfile.py
+    |       |   |   reloader.py
+    |       |   |   sock.py
+    |       |   |   systemd.py
+    |       |   |   util.py
+    |       |   |   __init__.py
+    |       |   |   __main__.py
+    |       |   |   
+    |       |   +---app
+    |       |   |   |   base.py
+    |       |   |   |   pasterapp.py
+    |       |   |   |   wsgiapp.py
+    |       |   |   |   __init__.py
+    |       |   |   |   
+    |       |   |   \---__pycache__
+    |       |   |           base.cpython-313.pyc
+    |       |   |           pasterapp.cpython-313.pyc
+    |       |   |           wsgiapp.cpython-313.pyc
+    |       |   |           __init__.cpython-313.pyc
+    |       |   |           
+    |       |   +---http
+    |       |   |   |   body.py
+    |       |   |   |   errors.py
+    |       |   |   |   message.py
+    |       |   |   |   parser.py
+    |       |   |   |   unreader.py
+    |       |   |   |   wsgi.py
+    |       |   |   |   __init__.py
+    |       |   |   |   
+    |       |   |   \---__pycache__
+    |       |   |           body.cpython-313.pyc
+    |       |   |           errors.cpython-313.pyc
+    |       |   |           message.cpython-313.pyc
+    |       |   |           parser.cpython-313.pyc
+    |       |   |           unreader.cpython-313.pyc
+    |       |   |           wsgi.cpython-313.pyc
+    |       |   |           __init__.cpython-313.pyc
+    |       |   |           
+    |       |   +---instrument
+    |       |   |   |   statsd.py
+    |       |   |   |   __init__.py
+    |       |   |   |   
+    |       |   |   \---__pycache__
+    |       |   |           statsd.cpython-313.pyc
+    |       |   |           __init__.cpython-313.pyc
+    |       |   |           
+    |       |   +---workers
+    |       |   |   |   base.py
+    |       |   |   |   base_async.py
+    |       |   |   |   geventlet.py
+    |       |   |   |   ggevent.py
+    |       |   |   |   gthread.py
+    |       |   |   |   gtornado.py
+    |       |   |   |   sync.py
+    |       |   |   |   workertmp.py
+    |       |   |   |   __init__.py
+    |       |   |   |   
+    |       |   |   \---__pycache__
+    |       |   |           base.cpython-313.pyc
+    |       |   |           base_async.cpython-313.pyc
+    |       |   |           geventlet.cpython-313.pyc
+    |       |   |           ggevent.cpython-313.pyc
+    |       |   |           gthread.cpython-313.pyc
+    |       |   |           gtornado.cpython-313.pyc
+    |       |   |           sync.cpython-313.pyc
+    |       |   |           workertmp.cpython-313.pyc
+    |       |   |           __init__.cpython-313.pyc
+    |       |   |           
+    |       |   \---__pycache__
+    |       |           arbiter.cpython-313.pyc
+    |       |           config.cpython-313.pyc
+    |       |           debug.cpython-313.pyc
+    |       |           errors.cpython-313.pyc
+    |       |           glogging.cpython-313.pyc
+    |       |           pidfile.cpython-313.pyc
+    |       |           reloader.cpython-313.pyc
+    |       |           sock.cpython-313.pyc
+    |       |           systemd.cpython-313.pyc
+    |       |           util.cpython-313.pyc
+    |       |           __init__.cpython-313.pyc
+    |       |           __main__.cpython-313.pyc
+    |       |           
+    |       +---gunicorn-23.0.0.dist-info
+    |       |       entry_points.txt
+    |       |       INSTALLER
+    |       |       LICENSE
+    |       |       METADATA
+    |       |       RECORD
+    |       |       REQUESTED
+    |       |       top_level.txt
+    |       |       WHEEL
+    |       |       
+    |       +---packaging
+    |       |   |   markers.py
+    |       |   |   metadata.py
+    |       |   |   py.typed
+    |       |   |   requirements.py
+    |       |   |   specifiers.py
+    |       |   |   tags.py
+    |       |   |   utils.py
+    |       |   |   version.py
+    |       |   |   _elffile.py
+    |       |   |   _manylinux.py
+    |       |   |   _musllinux.py
+    |       |   |   _parser.py
+    |       |   |   _structures.py
+    |       |   |   _tokenizer.py
+    |       |   |   __init__.py
+    |       |   |   
+    |       |   +---licenses
+    |       |   |   |   _spdx.py
+    |       |   |   |   __init__.py
+    |       |   |   |   
+    |       |   |   \---__pycache__
+    |       |   |           _spdx.cpython-313.pyc
+    |       |   |           __init__.cpython-313.pyc
+    |       |   |           
+    |       |   \---__pycache__
+    |       |           markers.cpython-313.pyc
+    |       |           metadata.cpython-313.pyc
+    |       |           requirements.cpython-313.pyc
+    |       |           specifiers.cpython-313.pyc
+    |       |           tags.cpython-313.pyc
+    |       |           utils.cpython-313.pyc
+    |       |           version.cpython-313.pyc
+    |       |           _elffile.cpython-313.pyc
+    |       |           _manylinux.cpython-313.pyc
+    |       |           _musllinux.cpython-313.pyc
+    |       |           _parser.cpython-313.pyc
+    |       |           _structures.cpython-313.pyc
+    |       |           _tokenizer.cpython-313.pyc
+    |       |           __init__.cpython-313.pyc
+    |       |           
+    |       +---packaging-25.0.dist-info
+    |       |   |   INSTALLER
+    |       |   |   METADATA
+    |       |   |   RECORD
+    |       |   |   WHEEL
+    |       |   |   
+    |       |   \---licenses
+    |       |           LICENSE
+    |       |           LICENSE.APACHE
+    |       |           LICENSE.BSD
+    |       |           
     |       +---pip
     |       |   |   py.typed
     |       |   |   __init__.py
@@ -11013,19 +11323,70 @@ C:.
     |       |   \---__pycache__
     |       |           __init__.cpython-313.pyc
     |       |           
-    |       \---tzdata-2025.2.dist-info
+    |       +---tzdata-2025.2.dist-info
+    |       |   |   INSTALLER
+    |       |   |   METADATA
+    |       |   |   RECORD
+    |       |   |   top_level.txt
+    |       |   |   WHEEL
+    |       |   |   
+    |       |   \---licenses
+    |       |       |   LICENSE
+    |       |       |   
+    |       |       \---licenses
+    |       |               LICENSE_APACHE
+    |       |               
+    |       +---whitenoise
+    |       |   |   base.py
+    |       |   |   compress.py
+    |       |   |   media_types.py
+    |       |   |   middleware.py
+    |       |   |   responders.py
+    |       |   |   storage.py
+    |       |   |   string_utils.py
+    |       |   |   __init__.py
+    |       |   |   
+    |       |   +---runserver_nostatic
+    |       |   |   |   __init__.py
+    |       |   |   |   
+    |       |   |   +---management
+    |       |   |   |   |   __init__.py
+    |       |   |   |   |   
+    |       |   |   |   +---commands
+    |       |   |   |   |   |   runserver.py
+    |       |   |   |   |   |   __init__.py
+    |       |   |   |   |   |   
+    |       |   |   |   |   \---__pycache__
+    |       |   |   |   |           runserver.cpython-313.pyc
+    |       |   |   |   |           __init__.cpython-313.pyc
+    |       |   |   |   |           
+    |       |   |   |   \---__pycache__
+    |       |   |   |           __init__.cpython-313.pyc
+    |       |   |   |           
+    |       |   |   \---__pycache__
+    |       |   |           __init__.cpython-313.pyc
+    |       |   |           
+    |       |   \---__pycache__
+    |       |           base.cpython-313.pyc
+    |       |           compress.cpython-313.pyc
+    |       |           media_types.cpython-313.pyc
+    |       |           middleware.cpython-313.pyc
+    |       |           responders.cpython-313.pyc
+    |       |           storage.cpython-313.pyc
+    |       |           string_utils.cpython-313.pyc
+    |       |           __init__.cpython-313.pyc
+    |       |           
+    |       \---whitenoise-6.11.0.dist-info
     |           |   INSTALLER
     |           |   METADATA
     |           |   RECORD
+    |           |   REQUESTED
     |           |   top_level.txt
     |           |   WHEEL
     |           |   
     |           \---licenses
-    |               |   LICENSE
-    |               |   
-    |               \---licenses
-    |                       LICENSE_APACHE
-    |                       
+    |                   LICENSE
+    |                   
     \---Scripts
             activate
             activate.bat
@@ -11034,6 +11395,7 @@ C:.
             deactivate.bat
             django-admin.exe
             dotenv.exe
+            gunicorn.exe
             pip.exe
             pip3.13.exe
             pip3.exe
