@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Purchase, Sale, Stock, Product, Supplier, Customer
-from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
@@ -214,7 +213,6 @@ def products(request):
     return render(request, "galeria/products.html", context)
 
 
-@csrf_exempt
 def product_create(request):
     if request.method == "POST":
         name = (request.POST.get("name") or "").strip()

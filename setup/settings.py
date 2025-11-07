@@ -18,18 +18,20 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = ['core-production-8197.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://core-production-8197.up.railway.app']
 
-# Corrige reconhecimento de HTTPS no Railway (proxy reverso)
+# Reconhecer HTTPS corretamente
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Segurança CSRF e cookies em produção (Railway)
+# Cookies seguros para HTTPS
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
+# Corrige envio de cookies CSRF em HTTPS
 CSRF_COOKIE_SAMESITE = 'None'
 
-# Opcional: impede bloqueios estranhos de referrer
+# Permite requisições HTTPS externas confiáveis
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 
@@ -51,11 +53,12 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware', 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'setup.urls'
 

@@ -46,6 +46,7 @@
 
         <form method="post" action="">
           {% csrf_token %}
+          <p>Token gerado: {{ csrf_token }}</p>
           <div class="form-group">
             <label for="name">Name</label>
             <input id="name" name="name" maxlength="25" placeholder="Enter product name" value="{{ product.name }}" required>
