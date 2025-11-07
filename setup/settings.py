@@ -129,6 +129,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # WhiteNoise para servir arquivos estáticos no Railway
 if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+else:
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
 # Configuração para servir arquivos de mídia (opcional, mas boa prática)
 MEDIA_URL = '/media/'
