@@ -1,3 +1,4 @@
 release: python Core/manage.py migrate --noinput && python Core/manage.py collectstatic --noinput
 web: gunicorn Core.setup.wsgi --bind 0.0.0.0:$PORT --log-file -
 
+
