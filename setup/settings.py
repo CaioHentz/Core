@@ -19,9 +19,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
-CSRF_TRUSTED_ORIGINS = [
-    'https://core-production-8197.up.railway.app'
-]
+CSRF_TRUSTED_ORIGINS = ['https://core-production-8197.up.railway.app']
 
 # Corrige reconhecimento de HTTPS no Railway (proxy reverso)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -29,7 +27,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Segurança CSRF e cookies em produção (Railway)
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'None'
 
 # Opcional: impede bloqueios estranhos de referrer
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
@@ -149,3 +147,4 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
