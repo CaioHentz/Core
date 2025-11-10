@@ -18,10 +18,11 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.up.railway.app', 'core-production-8197.up.railway.app', 'localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://core-production-8197.up.railway.app'
+    'https://core-production-8197.up.railway.app',
+    'https://*.up.railway.app'
 ]
 
 # Reconhecer HTTPS corretamente
@@ -29,9 +30,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 SECURE_SSL_REDIRECT = False  # evita redirecionamento HTTPS duplo
 
-# Cookies seguros (use Secure only in production/when not DEBUG)
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
+# Cookies
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_USE_SESSIONS = False  # mantém o cookie separado, mais simples
 
 # CSRF cookie SameSite: allow cross-site only in production HTTPS
 CSRF_COOKIE_SAMESITE = 'Lax'
