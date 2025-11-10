@@ -19,17 +19,22 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['.up.railway.app', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://core-production-8197.up.railway.app']
+# Trust Railway subdomains by default and allow extra origins via env var
+CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
+_extra_csrf = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+if _extra_csrf:
+    CSRF_TRUSTED_ORIGINS += [o.strip() for o in _extra_csrf.split(',') if o.strip()]
 
 # Reconhecer HTTPS corretamente
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
-# Cookies seguros para HTTPS
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+# Cookies seguros (use Secure only in production/when not DEBUG)
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 
-# Corrige envio de cookies CSRF em HTTPS
-CSRF_COOKIE_SAMESITE = 'None'
+# CSRF cookie SameSite: allow cross-site only in production HTTPS
+CSRF_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
 
 # Permite requisições HTTPS externas confiáveis
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
