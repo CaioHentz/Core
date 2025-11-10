@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core - Suppliers</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <div class="container">
+    <aside>
+      <div class="logo">
+        <a href="{% url 'index' %}" class="anchor">
+          <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
+        </a>
+      </div>
+      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Documents</div>
+        <a href="{% url 'sales' %}" class="anchor"><div class="nav-item">🛒 Sales</div></a>
+        <a href="{% url 'purchase' %}" class="anchor"><div class="nav-item">📄 Purchases</div></a>
+        <a href="{% url 'inventory' %}" class="anchor"><div class="nav-item">📦 Inventory</div></a>
+      </div>
+      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Master Data</div>
+        <a href="{% url 'products' %}" class="anchor"><div class="nav-item">🧾 Products</div></a>
+        <a href="{% url 'customers' %}" class="anchor"><div class="nav-item">👤 Customers</div></a>
+        <a href="{% url 'suppliers' %}" class="anchor"><div class="nav-item">🏭 Suppliers</div></a>
+      </div>
+    </aside>
+
+    <main>
+      <div class="card">
+        <div class="card-header card-header-row">
+          <div>
+            <h1>Suppliers</h1>
+            <p class="text-muted m-0">Manage your supplier master here</p>
+          </div>
+          <a href="{% url 'supplier_create' %}" class="btn">+ New Supplier</a>
+        </div>
+
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in suppliers %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ s.name }}</td>
+              <td>{{ s.description|default:"-" }}</td>
+              <td>
+                <a href="{% url 'supplier_edit' s.id %}" class="btn btn-sm">Edit</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4">No suppliers yet. Click "New Supplier" to add one.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

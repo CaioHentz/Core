@@ -4,7 +4,7 @@ from collections import defaultdict
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .models import Purchase, Sale, Stock, Product
+from .models import Purchase, Sale, Stock, Product, Supplier, Customer
 
 
 def index(request):
@@ -18,9 +18,12 @@ def index(request):
 
     # Aggregate quantities sold per product
     sold_qty_map = defaultdict(Decimal)
+    sold_value_map = defaultdict(Decimal)
     for s in sales_qs:
         try:
-            sold_qty_map[s.product] += (s.quantity or Decimal("0"))
+            qty = (s.quantity or Decimal("0"))
+            sold_qty_map[s.product] += qty
+            sold_value_map[s.product] += (qty * (s.price or Decimal("0")))
         except Exception:
             pass
 
@@ -29,10 +32,10 @@ def index(request):
     else:
         most_sold_name, most_sold_qty = "N/A", Decimal("0")
 
-    # Chart data: Top 5 sold products by quantity
-    top_sorted = sorted(sold_qty_map.items(), key=lambda kv: kv[1], reverse=True)[:5]
+    # Chart data: Top 5 products by value sold
+    top_sorted = sorted(sold_value_map.items(), key=lambda kv: kv[1], reverse=True)[:5]
     top_labels = [name for name, _ in top_sorted]
-    top_data = [float(q) for _, q in top_sorted]
+    top_data = [float(v) for _, v in top_sorted]
 
     # Chart data: Totals (sales vs purchases)
     totals_labels = ["Sales", "Purchases"]
@@ -95,8 +98,10 @@ def purchase(request):
                 if qty <= 0 or price < 0:
                     messages.error(request, "Quantity must be > 0 and price must be >= 0.")
                 else:
-                    # Validate product existence before recording purchase
-                    if not Product.objects.filter(name__iexact=product).exists():
+                    # Validate supplier and product existence before recording purchase
+                    if not Supplier.objects.filter(name__iexact=supplier).exists():
+                        messages.error(request, f"Supplier '{supplier}' does not exist. Please create it first in Suppliers.")
+                    elif not Product.objects.filter(name__iexact=product).exists():
                         messages.error(request, f"Product '{product}' does not exist. Please create it first in Products.")
                     else:
                         Purchase.objects.create(
@@ -114,6 +119,7 @@ def purchase(request):
 
     purchases = Purchase.objects.order_by("-created_at")
     products_qs = Product.objects.order_by("name")
+    suppliers_qs = Supplier.objects.order_by("name")
     uom_map = {p.name.lower(): p.unit_of_measure for p in products_qs}
     for obj in purchases:
         try:
@@ -124,6 +130,7 @@ def purchase(request):
     context = {
         "purchases": purchases,
         "products": products_qs,
+        "suppliers": suppliers_qs,
         "uom_map": uom_map,
     }
     return render(request, "galeria/purchase.html", context)
@@ -145,8 +152,10 @@ def sales(request):
                 if qty <= 0 or price < 0:
                     messages.error(request, "Quantity must be > 0 and price must be >= 0.")
                 else:
-                    # Validate product existence before sale
-                    if not Product.objects.filter(name__iexact=product).exists():
+                    # Validate customer and product existence before sale
+                    if not Customer.objects.filter(name__iexact=customer).exists():
+                        messages.error(request, f"Customer '{customer}' does not exist. Please create it first in Customers.")
+                    elif not Product.objects.filter(name__iexact=product).exists():
                         messages.error(request, f"Product '{product}' does not exist. Please create it first in Products.")
                     else:
                         # Attempt to remove stock before creating sale 
@@ -166,6 +175,7 @@ def sales(request):
 
     sales_qs = Sale.objects.order_by("-created_at")
     products_qs = Product.objects.order_by("name")
+    customers_qs = Customer.objects.order_by("name")
     uom_map = {p.name.lower(): p.unit_of_measure for p in products_qs}
     for obj in sales_qs:
         try:
@@ -176,6 +186,7 @@ def sales(request):
     context = {
         "sales": sales_qs,
         "products": products_qs,
+        "customers": customers_qs,
         "uom_map": uom_map,
     }
     return render(request, "galeria/sales.html", context)
@@ -241,3 +252,91 @@ def product_edit(request, pk):
             return redirect("products")
 
     return render(request, "galeria/product_form.html", {"product": product})
+
+
+def customers(request):
+    customers_qs = Customer.objects.order_by("name")
+    context = {"customers": customers_qs}
+    return render(request, "galeria/customers.html", context)
+
+
+def customer_create(request):
+    if request.method == "POST":
+        name = (request.POST.get("name") or "").strip()
+        description = (request.POST.get("description") or "").strip()
+
+        if not name:
+            messages.error(request, "Name is required.")
+        elif Customer.objects.filter(name__iexact=name).exists():
+            messages.error(request, f"Customer '{name}' already exists.")
+        else:
+            Customer.objects.create(name=name, description=description)
+            messages.success(request, f"Customer '{name}' created.")
+            return redirect("customers")
+
+    return render(request, "galeria/customer_form.html")
+
+
+def customer_edit(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+
+    if request.method == "POST":
+        name = (request.POST.get("name") or "").strip()
+        description = (request.POST.get("description") or "").strip()
+
+        if not name:
+            messages.error(request, "Name is required.")
+        elif Customer.objects.filter(name__iexact=name).exclude(pk=pk).exists():
+            messages.error(request, f"Customer '{name}' already exists.")
+        else:
+            customer.name = name
+            customer.description = description
+            customer.save()
+            messages.success(request, f"Customer '{name}' updated.")
+            return redirect("customers")
+
+    return render(request, "galeria/customer_form.html", {"customer": customer})
+
+
+def suppliers(request):
+    suppliers_qs = Supplier.objects.order_by("name")
+    context = {"suppliers": suppliers_qs}
+    return render(request, "galeria/suppliers.html", context)
+
+
+def supplier_create(request):
+    if request.method == "POST":
+        name = (request.POST.get("name") or "").strip()
+        description = (request.POST.get("description") or "").strip()
+
+        if not name:
+            messages.error(request, "Name is required.")
+        elif Supplier.objects.filter(name__iexact=name).exists():
+            messages.error(request, f"Supplier '{name}' already exists.")
+        else:
+            Supplier.objects.create(name=name, description=description)
+            messages.success(request, f"Supplier '{name}' created.")
+            return redirect("suppliers")
+
+    return render(request, "galeria/supplier_form.html")
+
+
+def supplier_edit(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+
+    if request.method == "POST":
+        name = (request.POST.get("name") or "").strip()
+        description = (request.POST.get("description") or "").strip()
+
+        if not name:
+            messages.error(request, "Name is required.")
+        elif Supplier.objects.filter(name__iexact=name).exclude(pk=pk).exists():
+            messages.error(request, f"Supplier '{name}' already exists.")
+        else:
+            supplier.name = name
+            supplier.description = description
+            supplier.save()
+            messages.success(request, f"Supplier '{name}' updated.")
+            return redirect("suppliers")
+
+    return render(request, "galeria/supplier_form.html", {"supplier": supplier})

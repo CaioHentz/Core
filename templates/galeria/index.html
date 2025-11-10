@@ -17,60 +17,29 @@
           <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
         </a>
       </div>
-      <a href="{% url 'sales' %}" class="anchor">
-        <div class="nav-item">🛒 Sales</div>
-      </a>
-      <a href="{% url 'purchase' %}" class="anchor">
-        <div class="nav-item">📄 Purchases</div>
-      </a>
-      <a href="{% url 'inventory' %}" class="anchor">
-        <div class="nav-item">📦 Inventory</div>
-      </a>
-      <a href="{% url 'products' %}" class="anchor">
-        <div class="nav-item">🧾 Products</div>
-      </a>
+      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Documents</div>
+        <a href="{% url 'sales' %}" class="anchor"><div class="nav-item">🛒 Sales</div></a>
+        <a href="{% url 'purchase' %}" class="anchor"><div class="nav-item">📄 Purchases</div></a>
+        <a href="{% url 'inventory' %}" class="anchor"><div class="nav-item">📦 Inventory</div></a>
+      </div>
+      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Master Data</div>
+        <a href="{% url 'products' %}" class="anchor"><div class="nav-item">🧾 Products</div></a>
+        <a href="{% url 'customers' %}" class="anchor"><div class="nav-item">👤 Customers</div></a>
+        <a href="{% url 'suppliers' %}" class="anchor"><div class="nav-item">🏭 Suppliers</div></a>
+      </div>
     </aside>
 
     <main>
       <!-- Quick actions -->
-      <div class="card">
-        <div class="card-header card-header-flex">
-            <h1 class="card-header-main">Core Dashboard</h1>
-            <p class="text-muted">Simplify. Organize. Grow.</p>
-        </div>
-        <div class="actions">
-          <a href="{% url 'sales' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">🛒</div>
-              <div>Sales</div>
-            </div>
-          </a>
-          <a href="{% url 'purchase' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">📄</div>
-              <div>Purchases</div>
-            </div>
-          </a>
-          <a href="{% url 'inventory' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">📦</div>
-              <div>Inventory</div>
-            </div>
-          </a>
-          <a href="{% url 'products' %}" class="anchor">
-            <div class="action-card">
-              <div class="action-icon">🧾</div>
-              <div>Products</div>
-            </div>
-          </a>
-        </div>
-      </div>
+    
 
       <!-- KPI metrics -->
       <div class="card">
         <div class="card-header card-header-flex">
           <h2 class="card-header-main">Key Metrics</h2>
-          <p class="text-muted">Overview of your store performance</p>
+          <p class="text-muted">Overview of your performance</p>
         </div>
         <div class="actions">
           <div class="action-card">
@@ -121,7 +90,7 @@
 
       <div class="card">
         <div class="card-header">
-          <h2>Top Products Sold</h2>
+          <h2>Top Products by Sales Value</h2>
         </div>
         <div class="card-body">
           <canvas id="topProductsChart" height="140"></canvas>
@@ -212,7 +181,7 @@
         data: {
           labels: topLabelsFinal,
           datasets: [{
-            label: 'Quantity Sold',
+            label: 'Sales Value',
             data: topDataFinal,
           backgroundColor: '#2196F3'
           }]
@@ -226,7 +195,7 @@
               callbacks: {
                 label: function(ctx) {
                   const val = (ctx.parsed && typeof ctx.parsed.y !== 'undefined') ? ctx.parsed.y : ctx.raw;
-                  return ctx.dataset.label + ': ' + fmt(val);
+                  return ctx.dataset.label + ': ' + fmtCurrency(val);
                 }
               }
             }
@@ -235,7 +204,7 @@
             y: {
               beginAtZero: true,
               ticks: {
-                callback: function(value) { return fmt(value); }
+                callback: function(value) { return fmtCurrency(value); }
               }
             }
           }
@@ -243,5 +212,6 @@
       });
     })();
   </script>
+  
 </body>
 </html>
