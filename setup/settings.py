@@ -27,13 +27,15 @@ CSRF_TRUSTED_ORIGINS = [
 # Reconhecer HTTPS corretamente
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
+SECURE_SSL_REDIRECT = False  # evita redirecionamento HTTPS duplo
 
 # Cookies seguros (use Secure only in production/when not DEBUG)
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 
 # CSRF cookie SameSite: allow cross-site only in production HTTPS
-CSRF_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = False
 
 # Permite requisições HTTPS externas confiáveis
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
@@ -156,3 +158,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
+
+
+CSRF_COOKIE_DOMAIN = "core-production-8197.up.railway.app"
