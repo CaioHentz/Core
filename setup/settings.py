@@ -160,7 +160,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
+CSRF_FAILURE_VIEW = 'setup.csrf_debug.csrf_debug_view'
 
 
 CSRF_COOKIE_DOMAIN = "core-production-8197.up.railway.app"
