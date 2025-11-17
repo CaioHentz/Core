@@ -3,6 +3,9 @@ from collections import defaultdict
 
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from openpyxl import Workbook
+from io import BytesIO
 
 from .models import Purchase, Sale, Stock, Product, Supplier, Customer
 
@@ -340,3 +343,98 @@ def supplier_edit(request, pk):
             return redirect("suppliers")
 
     return render(request, "galeria/supplier_form.html", {"supplier": supplier})
+
+
+# Export to Excel endpoints
+
+def sales_export(request):
+    sales_qs = Sale.objects.order_by("created_at")
+    columns = ["Date", "Customer", "Product", "Quantity", "Price (Unit)", "Total"]
+    rows = []
+    for s in sales_qs:
+        rows.append([
+            s.created_at.strftime("%Y-%m-%d %H:%M"),
+            s.customer,
+            s.product,
+            float(s.quantity or Decimal("0")),
+            float(s.price or Decimal("0")),
+            float((s.quantity or Decimal("0")) * (s.price or Decimal("0"))),
+        ])
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sales"
+    ws.append(columns)
+    for r in rows:
+        ws.append(r)
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = 'attachment; filename="sales.xlsx"'
+    return response
+
+
+def purchase_export(request):
+    purchases_qs = Purchase.objects.order_by("created_at")
+    columns = ["Date", "Supplier", "Product", "Quantity", "Price (Unit)", "Total"]
+    rows = []
+    for p in purchases_qs:
+        rows.append([
+            p.created_at.strftime("%Y-%m-%d %H:%M"),
+            p.supplier,
+            p.product,
+            float(p.quantity or Decimal("0")),
+            float(p.price or Decimal("0")),
+            float((p.quantity or Decimal("0")) * (p.price or Decimal("0"))),
+        ])
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Purchases"
+    ws.append(columns)
+    for r in rows:
+        ws.append(r)
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = 'attachment; filename="purchases.xlsx"'
+    return response
+
+
+def inventory_export(request):
+    stocks = Stock.objects.order_by("product")
+    products_qs = Product.objects.all()
+    uom_map = {p.name.lower(): p.unit_of_measure for p in products_qs}
+    columns = ["Product", "Quantity", "UoM"]
+    rows = []
+    for s in stocks:
+        try:
+            uom = uom_map.get(s.product.lower(), "")
+        except AttributeError:
+            uom = ""
+        rows.append([
+            s.product,
+            float(s.quantity or Decimal("0")),
+            uom,
+        ])
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Inventory"
+    ws.append(columns)
+    for r in rows:
+        ws.append(r)
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = 'attachment; filename="inventory.xlsx"'
+    return response

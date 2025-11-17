@@ -32,9 +32,12 @@
 
     <main>
       <div class="card">
-        <div class="card-header">
-          <h1>Purchases</h1>
-          <p class="text-muted">Manage your product purchases here</p>
+        <div class="card-header card-header-row">
+          <div>
+            <h1>Purchases</h1>
+            <p class="text-muted m-0">Manage your product purchases here</p>
+          </div>
+          <a href="{% url 'purchase_export' %}" class="btn secondary">Exportar Excel</a>
         </div>
 
         {% if messages %}
