@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core - New User</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <div class="container">
+
+    <aside>
+      <div class="logo">
+          <a href="{% url 'index' %}" class="anchor">
+            <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
+          </a>
+      </div>
+    </aside>
+
+    <main>
+      <div class="card">
+        <div class="card-header">
+          <h1>New User</h1>
+          <p class="text-muted">Create a new user</p>
+        </div>
+
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" name="username" maxlength="25" placeholder="Enter username" value="{{ user.username }}" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" placeholder="Enter password"{{ user.password }} required>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Create</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

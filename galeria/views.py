@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from openpyxl import Workbook
 from io import BytesIO
 
-from .models import Purchase, Sale, Stock, Product, Supplier, Customer
+from .models import Purchase, Sale, Stock, Product, Supplier, Customer, User
 
 
 def index(request):
@@ -438,3 +438,19 @@ def inventory_export(request):
     )
     response["Content-Disposition"] = 'attachment; filename="inventory.xlsx"'
     return response
+
+def register_view(request):
+    if request.method == "POST":
+        username = (request.POST.get("username") or "").strip()
+        password = (request.POST.get("password") or "").strip()
+
+        if not username:
+            messages.error(request, "Username is required.")
+        elif User.objects.filter(username__iexact=username).exists():
+            messages.error(request, f"User '{username}' already exists.")
+        else:
+            User.objects.create(username=username, password=password)
+            messages.success(request, f"User '{username}' created.")
+            return redirect("register")
+        
+    return render(request, "galeria/register.html")
