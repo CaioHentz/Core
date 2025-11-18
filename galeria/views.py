@@ -451,6 +451,6 @@ def register_view(request):
         else:
             User.objects.create(username=username, password=password)
             messages.success(request, f"User '{username}' created.")
-            return redirect("register")
+            return redirect("register_view")
         
     return render(request, "galeria/register.html")
