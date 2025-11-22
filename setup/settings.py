@@ -18,8 +18,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -69,7 +68,7 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.parse(
-        os.getenv("DATABASE_URL", "postgresql://core_db_z1wt_user:mhzVACnwZDzTUWgFYgcm8bTjltsESvHS@dpg-d4gfk5ndiees73as5db0-a/core_db_z1wt"),
+        os.getenv("DATABASE_URL", "postgresql://postgres:dZTqshNKwasZSlvBecSXXApwanTKXRDn@metro.proxy.rlwy.net:32923/railway"),
         conn_max_age=600,
         ssl_require=False
     )
