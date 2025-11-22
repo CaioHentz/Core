@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.parse(
-        os.getenv("DATABASE_URL", "postgresql://postgres:dZTqshNKwasZSlvBecSXXApwanTKXRDn@metro.proxy.rlwy.net:32923/railway"),
+        os.getenv("DATABASE_URL", "postgresql://core_db_z1wt_user:mhzVACnwZDzTUWgFYgcm8bTjltsESvHS@dpg-d4gfk5ndiees73as5db0-a/core_db_z1wt"),
         conn_max_age=600,
         ssl_require=False
     )
