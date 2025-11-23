@@ -1,0 +1,39 @@
+{% extends "galeria/base.html" %}
+{% load static %}
+
+{% block sidebar %}
+  {% include "galeria/_sidebar.html" with active="" %}
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h1>New User</h1>
+      <p class="text-muted">Create a new user</p>
+    </div>
+
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" action="">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" name="username" maxlength="25" placeholder="Enter username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" maxlength="25" placeholder="Enter password" required>
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn">Create</button>
+        <a href="{% url 'index' %}" class="btn secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

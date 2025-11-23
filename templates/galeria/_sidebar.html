@@ -1,0 +1,34 @@
+{% load static %}
+<aside>
+  <div class="logo">
+    <a href="{% url 'index' %}" class="anchor">
+      <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
+    </a>
+  </div>
+
+  <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+    <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Documents</div>
+    <a href="{% url 'sales' %}" class="anchor">
+      <div class="nav-item {% if active == 'sales' %}active{% endif %}">🛒 Sales</div>
+    </a>
+    <a href="{% url 'purchase' %}" class="anchor">
+      <div class="nav-item {% if active == 'purchase' %}active{% endif %}">📄 Purchases</div>
+    </a>
+    <a href="{% url 'inventory' %}" class="anchor">
+      <div class="nav-item {% if active == 'inventory' %}active{% endif %}">📦 Inventory</div>
+    </a>
+  </div>
+
+  <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+    <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Master Data</div>
+    <a href="{% url 'products' %}" class="anchor">
+      <div class="nav-item {% if active == 'products' %}active{% endif %}">🧾 Products</div>
+    </a>
+    <a href="{% url 'customers' %}" class="anchor">
+      <div class="nav-item {% if active == 'customers' %}active{% endif %}">👤 Customers</div>
+    </a>
+    <a href="{% url 'suppliers' %}" class="anchor">
+      <div class="nav-item {% if active == 'suppliers' %}active{% endif %}">🏭 Suppliers</div>
+    </a>
+  </div>
+</aside>

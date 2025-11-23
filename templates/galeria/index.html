@@ -1,106 +1,80 @@
+{% extends "galeria/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Core - Dashboard</title>
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+{% block head_extra %}
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-</head>
-<body>
-  <div class="container">
-    <aside>
-      <div class="logo">
-        <a href="{% url 'index' %}" class="anchor">
-          <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
-        </a>
-      </div>
-      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
-        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Documents</div>
-        <a href="{% url 'sales' %}" class="anchor"><div class="nav-item">🛒 Sales</div></a>
-        <a href="{% url 'purchase' %}" class="anchor"><div class="nav-item">📄 Purchases</div></a>
-        <a href="{% url 'inventory' %}" class="anchor"><div class="nav-item">📦 Inventory</div></a>
-      </div>
-      <div class="master-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
-        <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Master Data</div>
-        <a href="{% url 'products' %}" class="anchor"><div class="nav-item">🧾 Products</div></a>
-        <a href="{% url 'customers' %}" class="anchor"><div class="nav-item">👤 Customers</div></a>
-        <a href="{% url 'suppliers' %}" class="anchor"><div class="nav-item">🏭 Suppliers</div></a>
-      </div>
-    </aside>
+{% endblock %}
 
-    <main>
-      <!-- Quick actions -->
-    
+{% block sidebar %}
+  {% include "galeria/_sidebar.html" with active="" %}
+{% endblock %}
 
-      <!-- KPI metrics -->
-      <div class="card">
-        <div class="card-header card-header-flex">
-          <h2 class="card-header-main">Key Metrics</h2>
-          <p class="text-muted">Overview of your performance</p>
+{% block content %}
+  <!-- KPI metrics -->
+  <div class="card">
+    <div class="card-header card-header-flex">
+      <h2 class="card-header-main">Key Metrics</h2>
+      <p class="text-muted">Overview of your performance</p>
+    </div>
+    <div class="actions">
+      <div class="action-card">
+        <div class="action-icon">💰</div>
+        <div>
+          <div class="text-muted">Total Sales</div>
+          <div class="metric-value">{{ metrics.total_sales }}</div>
         </div>
-        <div class="actions">
-          <div class="action-card">
-            <div class="action-icon">💰</div>
-            <div>
-              <div class="text-muted">Total Sales</div>
-              <div class="metric-value">{{ metrics.total_sales }}</div>
-            </div>
-          </div>
-          <div class="action-card">
-            <div class="action-icon">🧾</div>
-            <div>
-              <div class="text-muted">Total Purchases</div>
-              <div class="metric-value">{{ metrics.total_purchases }}</div>
-            </div>
-          </div>
-          <div class="action-card">
-            <div class="action-icon">🏆</div>
-            <div>
-              <div class="text-muted">Product Most Sold</div>
-              <div class="metric-value">
-                {{ metrics.product_most_sold }}
-                {% if metrics.product_most_sold_qty %}
-                  ({{ metrics.product_most_sold_qty }})
-                {% endif %}
-              </div>
-            </div>
-          </div>
-          <div class="action-card">
-            <div class="action-icon">📈</div>
-            <div>
-              <div class="text-muted">Total Profit</div>
-              <div class="metric-value">{{ metrics.total_profit }}</div>
-            </div>
+      </div>
+      <div class="action-card">
+        <div class="action-icon">🧾</div>
+        <div>
+          <div class="text-muted">Total Purchases</div>
+          <div class="metric-value">{{ metrics.total_purchases }}</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-icon">🏆</div>
+        <div>
+          <div class="text-muted">Product Most Sold</div>
+          <div class="metric-value">
+            {{ metrics.product_most_sold }}
+            {% if metrics.product_most_sold_qty %}
+              ({{ metrics.product_most_sold_qty }})
+            {% endif %}
           </div>
         </div>
       </div>
-
-      <!-- Charts -->
-      <div class="card">
-        <div class="card-header">
-          <h2>Sales vs Purchases</h2>
-        </div>
-        <div class="card-body">
-          <canvas id="totalsChart" height="120"></canvas>
+      <div class="action-card">
+        <div class="action-icon">📈</div>
+        <div>
+          <div class="text-muted">Total Profit</div>
+          <div class="metric-value">{{ metrics.total_profit }}</div>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h2>Top Products by Sales Value</h2>
-        </div>
-        <div class="card-body">
-          <canvas id="topProductsChart" height="140"></canvas>
-        </div>
-      </div>
-
-      <!-- Embed charts data as JSON using Django's json_script for robust parsing -->
-      {{ charts|json_script:"charts-data" }}
-    </main>
+    </div>
   </div>
+
+  <!-- Charts -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Sales vs Purchases</h2>
+    </div>
+    <div class="card-body">
+      <canvas id="totalsChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Top Products by Sales Value</h2>
+    </div>
+    <div class="card-body">
+      <canvas id="topProductsChart" height="140"></canvas>
+    </div>
+  </div>
+
+  <!-- Embed charts data as JSON using Django's json_script for robust parsing -->
+  {{ charts|json_script:"charts-data" }}
 
   <script>
     (function() {
@@ -122,14 +96,11 @@
         if (!isFinite(x)) return '0';
         const neg = x < 0;
         const abs = Math.abs(x);
-        // keep up to 3 decimals then trim trailing zeros
         const fixed = abs.toFixed(3).replace(/\.?0+$/,''); // uses '.' as decimal temporarily
         const parts = fixed.split('.');
         const intPart = parts[0];
         const fracPart = parts[1];
-        // add thousands separators with '.' on absolute part
         const intWithDots = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        // use ',' as decimal separator if there are decimals
         const res = fracPart ? (intWithDots + ',' + fracPart) : intWithDots;
         return neg ? ('-' + res) : res;
       }
@@ -146,7 +117,7 @@
           datasets: [{
             label: 'Amount',
             data: totalsData,
-          backgroundColor: ['#4CAF50', '#F44336']
+            backgroundColor: ['#4CAF50', '#F44336']
           }]
         },
         options: {
@@ -183,7 +154,7 @@
           datasets: [{
             label: 'Sales Value',
             data: topDataFinal,
-          backgroundColor: '#2196F3'
+            backgroundColor: '#2196F3'
           }]
         },
         options: {
@@ -212,5 +183,4 @@
       });
     })();
   </script>
-</body>
-</html>
+{% endblock %}

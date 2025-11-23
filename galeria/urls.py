@@ -13,6 +13,10 @@ from galeria.views import (
     suppliers,
     supplier_create,
     supplier_edit,
+    sales_export,
+    purchase_export,
+    inventory_export,
+    register_view
 )
 
 urlpatterns = [
@@ -31,4 +35,10 @@ urlpatterns = [
     path('suppliers/', suppliers, name='suppliers'),
     path('suppliers/new/', supplier_create, name='supplier_create'),
     path('suppliers/<int:pk>/edit/', supplier_edit, name='supplier_edit'),
+
+    path('sales/export/', sales_export, name='sales_export'),
+    path('purchase/export/', purchase_export, name='purchase_export'),
+    path('inventory/export/', inventory_export, name='inventory_export'),
+
+    path('register/', register_view, name='register_view')
 ]
