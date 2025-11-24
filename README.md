@@ -55,7 +55,7 @@ Chart.js é carregado via CDN (não há dependência Python correspondente).
 
 2. Instale dependências:
    ```
-   pip install -r requirement.txt
+   pip install -r requirements.txt
    ```
 
 3. Aplique migrações:

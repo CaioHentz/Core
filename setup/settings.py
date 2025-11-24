@@ -18,11 +18,16 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['.up.railway.app', 'core-production-8197.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    '.up.railway.app',
+    '.railway.app',
+    'localhost',
+    '127.0.0.1',
+]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://core-production-8197.up.railway.app',
-    'https://*.up.railway.app'
+    'https://*.up.railway.app',
+    'https://*.railway.app',
 ]
 
 # Reconhecer HTTPS corretamente

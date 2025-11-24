@@ -6,11 +6,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from openpyxl import Workbook
 from io import BytesIO
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 from .models import Purchase, Sale, Stock, Product, Supplier, Customer, User
 
 
-def index(request):
+def index(request):    
     # Compute key metrics
     sales_qs = Sale.objects.all()
     purchases_qs = Purchase.objects.all()
@@ -441,16 +443,32 @@ def inventory_export(request):
 
 def register_view(request):
     if request.method == "POST":
-        username = (request.POST.get("username") or "").strip()
-        password = (request.POST.get("password") or "").strip()
+        username = request.POST.get("username") or ""
+        password = request.POST.get("password") or ""
 
-        if not username:
-            messages.error(request, "Username is required.")
-        elif User.objects.filter(username__iexact=username).exists():
-            messages.error(request, f"User '{username}' already exists.")
+        if User.objects.filter(username__iexact=username).exists():
+            messages.error(request, f"O usuário '{username}' já existe.")
         else:
-            User.objects.create(username=username, password=password)
-            messages.success(request, f"User '{username}' created.")
-            return redirect("register_view")
-        
+            user = User(username=username)
+            user.set_password(password)
+            user.save()
+
+            messages.success(request, "Conta criada com sucesso! Faça login.")
+            return redirect("login_view")
+
     return render(request, "galeria/register.html")
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username") or ""
+        password = request.POST.get("password") or ""
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is None:
+            messages.error(request, "Invalid credentials.")
+        else:
+            login(request, user)
+            return redirect("index")
+
+    return render(request, "galeria/login.html")

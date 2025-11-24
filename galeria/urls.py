@@ -16,7 +16,8 @@ from galeria.views import (
     sales_export,
     purchase_export,
     inventory_export,
-    register_view
+    register_view,
+    login_view
 )
 
 urlpatterns = [
@@ -40,5 +41,6 @@ urlpatterns = [
     path('purchase/export/', purchase_export, name='purchase_export'),
     path('inventory/export/', inventory_export, name='inventory_export'),
 
-    path('register/', register_view, name='register_view')
+    path('register/', register_view, name='register_view'),
+    path('login/', login_view, name='login_view')
 ]

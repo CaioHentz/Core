@@ -8,8 +8,8 @@
 {% block content %}
   <div class="card">
     <div class="card-header">
-      <h1>New User</h1>
-      <p class="text-muted">Create a new user</p>
+      <h1>Create Account</h1>
+      <p class="text-muted">Register a new user</p>
     </div>
 
     {% if messages %}
@@ -20,19 +20,21 @@
     </ul>
     {% endif %}
 
-    <form method="post" action="">
+    <form method="post">
       {% csrf_token %}
       <div class="form-group">
         <label for="username">Username</label>
-        <input id="username" name="username" maxlength="25" placeholder="Enter username" required>
+        <input id="username" name="username" required>
       </div>
+
       <div class="form-group">
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" maxlength="25" placeholder="Enter password" required>
+        <input id="password" name="password" type="password" required>
       </div>
+
       <div class="actions">
         <button type="submit" class="btn">Create</button>
-        <a href="{% url 'index' %}" class="btn secondary">Cancel</a>
+        <a href="{% url 'login_view' %}" class="btn secondary">Login</a>
       </div>
     </form>
   </div>
