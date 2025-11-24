@@ -1,4 +1,34 @@
 {% extends "galeria/base.html" %}
+{% load static %}
+{% block head_extra %}
+<style>
+  .top-logo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    z-index: 1000;
+  }
+  .top-logo img {
+    height: 40px;
+    width: auto;
+  }
+  /* On login page, no left sidebar: full width with top padding for fixed logo bar */
+  main { margin-left: 0; padding-top: 80px; }
+</style>
+{% endblock %}
+
+{% block sidebar %}
+  <header class="top-logo">
+    <img src="{% static 'imgs/core_logo.png' %}" alt="Core Logo">
+  </header>
+{% endblock %}
 
 {% block content %}
 <div class="card">

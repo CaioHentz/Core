@@ -6,10 +6,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from openpyxl import Workbook
 from io import BytesIO
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as DjangoUser
 from django.contrib.auth import authenticate, login
 
-from .models import Purchase, Sale, Stock, Product, Supplier, Customer, Account, User
+from .models import Purchase, Sale, Stock, Product, Supplier, Customer
 
 
 def index(request):    
@@ -458,46 +458,42 @@ def inventory_export(request):
 
 def register_account_view(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        username = request.POST.get("username") or ""
+        password = request.POST.get("password") or ""
 
         if not username or not password:
             messages.error(request, "You must fill all fields.")
-            return redirect("register")
+            return redirect("register_account_view")
 
-        if Account.objects.filter(username=username).exists():
+        if DjangoUser.objects.filter(username__iexact=username).exists():
             messages.error(request, "Username already exists.")
-            return redirect("register")
+            return redirect("register_account_view")
 
-        acc = Account(username=username)
-        acc.set_password(password)
+        user = DjangoUser(username=username)
+        user.set_password(password)
+        user.save()
 
-        messages.success(request, "Account created with success!")
-        return redirect("login")
+        messages.success(request, "Account created successfully! Please login.")
+        return redirect("authenticate_account_view")
 
     return render(request, "galeria/register.html")
 
 def authenticate_account_view(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        username = request.POST.get("username") or ""
+        password = request.POST.get("password") or ""
 
         if not username or not password:
             messages.error(request, "You must fill all fields.")
-            return redirect("login")
+            return redirect("authenticate_account_view")
 
-        try:
-            acc = Account.objects.get(username=username)
-        except Account.DoesNotExist:
+        user = authenticate(request, username=username, password=password)
+        if user is None:
             messages.error(request, "Invalid username or password.")
-            return redirect("login")
+            return redirect("authenticate_account_view")
 
-        if not acc.check_password(password):
-            messages.error(request, "Invalid username or password.")
-            return redirect("login")
-
-        request.session["account_id"] = acc.id
+        login(request, user)
         messages.success(request, "Login successful!")
-        return redirect("home")
+        return redirect("index")
 
     return render(request, "galeria/login.html")
