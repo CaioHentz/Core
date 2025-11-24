@@ -196,20 +196,35 @@ def sales(request):
     }
     return render(request, "galeria/sales.html", context)
 
+
+
 def inventory(request):
-    stocks = Stock.objects.order_by("product")
+    query = request.GET.get("q", "")
+
+    stocks = Stock.objects.all().order_by("product")
+
+    if query:
+        stocks = stocks.filter(product__icontains=query)
+
     products_qs = Product.objects.all()
     uom_map = {p.name.lower(): p.unit_of_measure for p in products_qs}
+
     for obj in stocks:
         try:
             obj_uom = uom_map.get(obj.product.lower(), "")
         except AttributeError:
             obj_uom = ""
         setattr(obj, "uom", obj_uom)
+
     context = {
         "stocks": stocks,
+        "query": query,
     }
+
     return render(request, "galeria/inventory.html", context)
+
+
+
 
 
 def products(request):

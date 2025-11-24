@@ -40,6 +40,8 @@ urlpatterns = [
     path('sales/export/', sales_export, name='sales_export'),
     path('purchase/export/', purchase_export, name='purchase_export'),
     path('inventory/export/', inventory_export, name='inventory_export'),
+    
+
 
     path('register/', register_view, name='register_view'),
     path('login/', login_view, name='login_view')

@@ -293,3 +293,29 @@ table th {
 .mt-2 {
   margin-top: 2rem;
 }
+
+
+.search-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+}
+
+.search-form button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
+}
+
+
+
