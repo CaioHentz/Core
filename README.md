@@ -3,29 +3,66 @@
 Aplicação simples para gestão de estoque, compras e vendas, com um Dashboard que exibe métricas e gráficos usando Chart.js.
 
 ## Funcionalidades
-- Gestão de estoque: controle da quantidade disponível por produto.
-- Registro de compras (Purchase): adiciona itens ao estoque.
-- Registro de vendas (Sales): registra vendas e decrementa o estoque.
-- Dashboard com:
+- Dashboard:
   - Total de Vendas (somatório de `quantidade * preço` nas vendas)
   - Total de Compras (somatório de `quantidade * preço` nas compras)
   - Produto mais vendido (por quantidade)
   - Lucro Total (`Total Vendas - Total Compras`)
   - Gráfico “Sales vs Purchases” (valores totais)
   - Gráfico “Top Products by Sales Value” (Top 5 por valor vendido)
+- Compras (Purchases):
+  - Registro de compras com validação de fornecedor e produto existentes
+  - Atualização de estoque ao adicionar compras (`Stock.add_stock`)
+  - Mensagens de sucesso/erro
+  - Exportação de compras para Excel
+- Vendas (Sales):
+  - Registro de vendas com validação de cliente e produto existentes
+  - Checagem de estoque e decremento ao efetivar a venda (`Stock.remove_stock`)
+  - Mensagens de sucesso/erro (inclui erro de estoque insuficiente)
+  - Exportação de vendas para Excel
+- Estoque (Inventory):
+  - Listagem do estoque atual com UoM (Unidade de Medida) por produto
+  - Busca por produto via parâmetro `q` (ex.: `/inventory/?q=arroz`)
+  - Exportação de estoque para Excel
+- Produtos:
+  - Listagem de produtos
+  - Criação de produto
+  - Edição de produto
+- Clientes:
+  - Listagem de clientes
+  - Criação de cliente
+  - Edição de cliente
+- Fornecedores:
+  - Listagem de fornecedores
+  - Criação de fornecedor
+  - Edição de fornecedor
+- Autenticação:
+  - Registro de usuário (Create Account)
+  - Login com autenticação e redirecionamento para o Dashboard
+  - Página de registro sem acesso à navegação lateral (aside); exibe somente o logo no topo
+- Navegação (UI):
+  - Sidebar com grupos “Documents” (Sales, Purchases, Inventory) e “Master Data” (Products, Customers, Suppliers)
+  - Indicação de menu ativo por página
+- Formatação de números e moeda:
+  - Formatação customizada com separador de milhar `.` e decimal `,`
+  - Até 3 casas decimais com remoção de zeros à direita
+  - Formatação de moeda com prefixo `$`
+- Exportações:
+  - Geração de planilhas Excel para Sales, Purchases e Inventory (OpenPyXL)
 
 ## Tecnologias
 - Back-end: Python (Django 5.2.5)
 - Front-end: HTML5 e CSS3
 - Gráficos: Chart.js via CDN (sem instalar no Python)
 - Formatação de números: lógica customizada para milhar e decimais
+- Exportação: OpenPyXL para geração de arquivos `.xlsx`
 
 ## Requisitos
-- Python 3.11+:
+- Python 3.11+
 - Pip
 - Virtualenv (opcional)
 
-Dependências Python (arquivo `requirement.txt`):
+Dependências Python (arquivo `requirements.txt`):
 ```
 asgiref==3.9.1
 Django==5.2.5
@@ -34,6 +71,7 @@ pygame==2.6.1
 python-dotenv==1.1.1
 sqlparse==0.5.3
 tzdata==2025.2
+openpyxl==3.1.5
 ```
 
 Chart.js é carregado via CDN (não há dependência Python correspondente).
@@ -87,7 +125,65 @@ Chart.js é carregado via CDN (não há dependência Python correspondente).
 - Sales: `/sales/`
 - Purchases: `/purchase/`
 - Inventory: `/inventory/`
-- Products: `/products/`
+- Products (list): `/products/`
+- Products (create): `/products/new/`
+- Products (edit): `/products/<pk>/edit/`
+- Customers (list): `/customers/`
+- Customers (create): `/customers/new/`
+- Customers (edit): `/customers/<pk>/edit/`
+- Suppliers (list): `/suppliers/`
+- Suppliers (create): `/suppliers/new/`
+- Suppliers (edit): `/suppliers/<pk>/edit/`
+- Export Sales: `/sales/export/`
+- Export Purchases: `/purchase/export/`
+- Export Inventory: `/inventory/export/`
+- Register: `/register/`
+- Login: `/login/`
+
+## Templates
+- Layout base: `Core/templates/galeria/base.html`
+- Sidebar: `Core/templates/galeria/_sidebar.html`
+- Dashboard: `Core/templates/galeria/index.html`
+- Compras: `Core/templates/galeria/purchase.html`
+- Vendas: `Core/templates/galeria/sales.html`
+- Estoque: `Core/templates/galeria/inventory.html`
+- Produtos (list): `Core/templates/galeria/products.html`
+- Produto (form create/edit): `Core/templates/galeria/product_form.html`
+- Clientes (list): `Core/templates/galeria/customers.html`
+- Cliente (form create/edit): `Core/templates/galeria/customer_form.html`
+- Fornecedores (list): `Core/templates/galeria/suppliers.html`
+- Fornecedor (form create/edit): `Core/templates/galeria/supplier_form.html`
+- Registro: `Core/templates/galeria/register.html`
+- Login: `Core/templates/galeria/login.html`
+
+Observação de UI para registro:
+- Em `register.html`, a navegação lateral (aside) é substituída por um cabeçalho fixo com o logo no topo, sem links de navegação.
+
+## Modelos de dados (resumo)
+- `Product(name, description, unit_of_measure)`
+- `Supplier(name, description)`
+- `Customer(name, description)`
+- `Stock(product, quantity)`
+  - Métodos de classe:
+    - `add_stock(product, quantity)`
+    - `remove_stock(product, quantity)`
+    - `display_stock(product)`
+    - `display_all_stock()`
+- `Purchase(supplier, product, quantity, price, created_at)`
+  - Propriedade: `total = quantity * price`
+- `Sale(customer, product, quantity, price, created_at)`
+  - Propriedade: `total = quantity * price`
+
+## Exportações (Excel)
+- Sales (`/sales/export/`):
+  - Colunas: `Date`, `Customer`, `Product`, `Quantity`, `Price (Unit)`, `Total`
+  - Ordenação por `created_at`
+- Purchases (`/purchase/export/`):
+  - Colunas: `Date`, `Supplier`, `Product`, `Quantity`, `Price (Unit)`, `Total`
+  - Ordenação por `created_at`
+- Inventory (`/inventory/export/`):
+  - Colunas: `Product`, `Quantity`, `UoM`
+  - Ordenação por `product`
 
 ## Dashboard e Chart.js
 
