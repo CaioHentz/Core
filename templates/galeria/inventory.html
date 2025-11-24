@@ -12,7 +12,7 @@
         <h1>Inventory</h1>
         <p class="text-muted m-0">Current stock by product</p>
       </div>
-      <a href="{% url 'inventory_export' %}" class="btn secondary">Exportar Excel</a>
+      <a href="{% url 'inventory_export' %}" class="btn secondary">Export Excel</a>
     </div>
 
     <form method="GET" action="{% url 'inventory' %}" 
@@ -22,12 +22,12 @@
   <input 
       type="text" 
       name="q" 
-      placeholder="Buscar item..."
+      placeholder="Search item..."
       value="{{ query }}"
       style="flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;"
   >
 
-  <button type="submit" class="btn">Buscar</button>
+  <button type="submit" class="btn">Search</button>
 </form>
 
 
