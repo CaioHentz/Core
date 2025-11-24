@@ -7,11 +7,13 @@ from django.http import HttpResponse
 from openpyxl import Workbook
 from io import BytesIO
 from django.contrib.auth.models import User as DjangoUser
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
 
-from .models import Purchase, Sale, Stock, Product, Supplier, Customer
+from .decorators import login_required_custom
 
+from .models import Purchase, Sale, Stock, Product, Supplier, Customer, Account
 
+@login_required_custom
 def index(request):    
     # Compute key metrics
     sales_qs = Sale.objects.all()
@@ -86,7 +88,7 @@ def index(request):
     }
     return render(request, "galeria/index.html", context)
 
-
+@login_required_custom
 def purchase(request):
     if request.method == "POST":
         supplier = (request.POST.get("supplier") or "").strip()
@@ -140,7 +142,7 @@ def purchase(request):
     }
     return render(request, "galeria/purchase.html", context)
 
-
+@login_required_custom
 def sales(request):
     if request.method == "POST":
         customer = (request.POST.get("customer") or "").strip()
@@ -197,7 +199,7 @@ def sales(request):
     return render(request, "galeria/sales.html", context)
 
 
-
+@login_required_custom
 def inventory(request):
     query = request.GET.get("q", "")
 
@@ -226,13 +228,13 @@ def inventory(request):
 
 
 
-
+@login_required_custom
 def products(request):
     products_qs = Product.objects.order_by("name")
     context = {"products": products_qs}
     return render(request, "galeria/products.html", context)
 
-
+@login_required_custom
 def product_create(request):
     if request.method == "POST":
         name = (request.POST.get("name") or "").strip()
@@ -250,7 +252,7 @@ def product_create(request):
 
     return render(request, "galeria/product_form.html")
 
-
+@login_required_custom
 def product_edit(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
@@ -273,13 +275,13 @@ def product_edit(request, pk):
 
     return render(request, "galeria/product_form.html", {"product": product})
 
-
+@login_required_custom
 def customers(request):
     customers_qs = Customer.objects.order_by("name")
     context = {"customers": customers_qs}
     return render(request, "galeria/customers.html", context)
 
-
+@login_required_custom
 def customer_create(request):
     if request.method == "POST":
         name = (request.POST.get("name") or "").strip()
@@ -296,7 +298,7 @@ def customer_create(request):
 
     return render(request, "galeria/customer_form.html")
 
-
+@login_required_custom
 def customer_edit(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
 
@@ -317,7 +319,7 @@ def customer_edit(request, pk):
 
     return render(request, "galeria/customer_form.html", {"customer": customer})
 
-
+@login_required_custom
 def suppliers(request):
     suppliers_qs = Supplier.objects.order_by("name")
     context = {"suppliers": suppliers_qs}
@@ -340,7 +342,7 @@ def supplier_create(request):
 
     return render(request, "galeria/supplier_form.html")
 
-
+@login_required_custom
 def supplier_edit(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)
 
@@ -362,8 +364,7 @@ def supplier_edit(request, pk):
     return render(request, "galeria/supplier_form.html", {"supplier": supplier})
 
 
-# Export to Excel endpoints
-
+@login_required_custom
 def sales_export(request):
     sales_qs = Sale.objects.order_by("created_at")
     columns = ["Date", "Customer", "Product", "Quantity", "Price (Unit)", "Total"]
@@ -393,7 +394,7 @@ def sales_export(request):
     response["Content-Disposition"] = 'attachment; filename="sales.xlsx"'
     return response
 
-
+@login_required_custom
 def purchase_export(request):
     purchases_qs = Purchase.objects.order_by("created_at")
     columns = ["Date", "Supplier", "Product", "Quantity", "Price (Unit)", "Total"]
@@ -423,7 +424,7 @@ def purchase_export(request):
     response["Content-Disposition"] = 'attachment; filename="purchases.xlsx"'
     return response
 
-
+@login_required_custom
 def inventory_export(request):
     stocks = Stock.objects.order_by("product")
     products_qs = Product.objects.all()
@@ -480,20 +481,33 @@ def register_account_view(request):
 
 def authenticate_account_view(request):
     if request.method == "POST":
-        username = request.POST.get("username") or ""
-        password = request.POST.get("password") or ""
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         if not username or not password:
             messages.error(request, "You must fill all fields.")
             return redirect("authenticate_account_view")
 
-        user = authenticate(request, username=username, password=password)
-        if user is None:
+        try:
+            account = DjangoUser.objects.get(username=username)
+        except DjangoUser.DoesNotExist:
             messages.error(request, "Invalid username or password.")
             return redirect("authenticate_account_view")
 
-        login(request, user)
+        if not check_password(password, account.password):
+            messages.error(request, "Invalid username or password.")
+            return redirect("authenticate_account_view")
+
+        request.session["account_id"] = account.id
         messages.success(request, "Login successful!")
         return redirect("index")
 
     return render(request, "galeria/login.html")
+
+
+@login_required_custom
+def logout_account_view(request):
+    if 'account_id' in request.session:
+        del request.session['account_id']
+    messages.success(request, "You have been logged out.")
+    return redirect('authenticate_account_view')
