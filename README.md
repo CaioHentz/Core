@@ -32,7 +32,6 @@ Django==5.2.5
 dotenv==0.9.9
 pygame==2.6.1
 python-dotenv==1.1.1
-pywin32==309
 sqlparse==0.5.3
 tzdata==2025.2
 ```
