@@ -1,6 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.utils import timezone
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class Product(models.Model):
@@ -99,6 +100,20 @@ class Sale(models.Model):
 class User(models.Model):
     username = models.CharField(max_length=25, null=False, blank=False)
     password = models.CharField(max_length=25, null=False, blank=False)
+
+    def __str__(self):
+        return f"{self.username}"
+    
+class Account(models.Model):
+    username = models.CharField(max_length=25, unique=True)
+    password = models.CharField(max_length=128)  
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self.save()
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
     def __str__(self):
         return f"{self.username}"

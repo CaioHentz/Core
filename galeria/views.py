@@ -9,7 +9,7 @@ from io import BytesIO
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 
-from .models import Purchase, Sale, Stock, Product, Supplier, Customer, User
+from .models import Purchase, Sale, Stock, Product, Supplier, Customer, Account, User
 
 
 def index(request):    
@@ -456,34 +456,48 @@ def inventory_export(request):
     response["Content-Disposition"] = 'attachment; filename="inventory.xlsx"'
     return response
 
-def register_view(request):
+def register_account_view(request):
     if request.method == "POST":
-        username = request.POST.get("username") or ""
-        password = request.POST.get("password") or ""
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-        if User.objects.filter(username__iexact=username).exists():
-            messages.error(request, f"O usuário '{username}' já existe.")
-        else:
-            user = User(username=username)
-            user.set_password(password)
-            user.save()
+        if not username or not password:
+            messages.error(request, "You must fill all fields.")
+            return redirect("register")
 
-            messages.success(request, "Conta criada com sucesso! Faça login.")
-            return redirect("login_view")
+        if Account.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return redirect("register")
+
+        acc = Account(username=username)
+        acc.set_password(password)
+
+        messages.success(request, "Account created with success!")
+        return redirect("login")
 
     return render(request, "galeria/register.html")
 
-def login_view(request):
+def authenticate_account_view(request):
     if request.method == "POST":
-        username = request.POST.get("username") or ""
-        password = request.POST.get("password") or ""
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-        user = authenticate(request, username=username, password=password)
+        if not username or not password:
+            messages.error(request, "You must fill all fields.")
+            return redirect("login")
 
-        if user is None:
-            messages.error(request, "Invalid credentials.")
-        else:
-            login(request, user)
-            return redirect("index")
+        try:
+            acc = Account.objects.get(username=username)
+        except Account.DoesNotExist:
+            messages.error(request, "Invalid username or password.")
+            return redirect("login")
+
+        if not acc.check_password(password):
+            messages.error(request, "Invalid username or password.")
+            return redirect("login")
+
+        request.session["account_id"] = acc.id
+        messages.success(request, "Login successful!")
+        return redirect("home")
 
     return render(request, "galeria/login.html")
