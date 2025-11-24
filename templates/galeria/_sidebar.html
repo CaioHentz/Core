@@ -30,7 +30,13 @@
     <a href="{% url 'suppliers' %}" class="anchor">
       <div class="nav-item {% if active == 'suppliers' %}active{% endif %}">🏭 Suppliers</div>
     </a>
-    <!-- AQUI THE DUNKS -->
-    <a href="{% url 'logout_account_view' %}">Logout</a>
+  </div>
+
+  <!-- Account section anchored at the bottom -->
+  <div class="account-group" style="background:#f0f0f0; padding:8px; border-radius:6px; margin-top:8px;">
+    <div class="master-label" style="font-size:12px; font-weight:600; text-transform:uppercase; color:#555; margin-bottom:6px;">Account</div>
+    <a href="{% url 'logout_account_view' %}" class="anchor logout-btn">
+      <div class="logout-item">🚪 Logout</div>
+    </a>
   </div>
 </aside>
